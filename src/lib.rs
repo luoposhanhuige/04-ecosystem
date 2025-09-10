@@ -1,6 +1,3 @@
-mod error;
-pub use error::MyError;
-
 // Yes, exactly! lib.rs acts as the public API hub for your crate.
 // How it works:
 // mod error; - Declares the error module (from src/error.rs or src/error/mod.rs)
