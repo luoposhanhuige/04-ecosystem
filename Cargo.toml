@@ -7,9 +7,15 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.99"
+features = "0.10.0"
+opentelemetry = "0.30.0"
+opentelemetry-otlp = { version = "0.30.0", features = ["grpc-tonic", "http-proto"] }
+opentelemetry_sdk = { version = "0.30.0", features = ["rt-tokio"] }
 thiserror = "2.0.16"
+tonic = "0.14.2"
 tracing = "0.1.41"
 tracing-appender = "0.2.3"
+tracing-opentelemetry = "0.31.0"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 
 [dev-dependencies]
@@ -17,3 +23,36 @@ axum = { version = "0.8.4", features = ["http2", "query", "tracing"] }
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.143"
 tokio = { version = "1.47.1", features = ["rt", "rt-multi-thread", "macros"] }
+
+# Crate Roles
+# tracing: Core instrumentation API (spans, events, macros).
+# tracing-subscriber: Implements the Subscriber; layering, filtering, formatting, registry.
+# tracing-appender: Helpers for file output (rolling, non-blocking) used by fmt layer in tracing-subscriber.
+# tracing-opentelemetry: Bridge layer; converts tracing spans/events into OpenTelemetry spans.
+# opentelemetry: OpenTelemetry API traits/types (Tracer, Context, propagation).
+# opentelemetry_sdk: Concrete SDK (SdkTracerProvider, BatchSpanProcessor, Resource).
+# opentelemetry-otlp: OTLP exporters (SpanExporter). With feature grpc-tonic it provides a gRPC OTLP exporter.
+# tonic: gRPC client runtime used by the OTLP exporter to send spans.
+# Data / Control Flow
+# You instrument code with #[instrument], debug!, info!, etc. (tracing).
+# Events/spans go to the global tracing Subscriber (from tracing-subscriber).
+# Formatting/file output handled by fmt layer + tracing-appender.
+# tracing-opentelemetry layer observes span lifecycle, builds OTel spans.
+# opentelemetry_sdk manages span processors, batching, resources, propagation.
+# opentelemetry-otlp exporter serializes batches to OTLP.
+# tonic sends them via gRPC to the configured OTLP endpoint (collector).
+# Propagation
+# TraceContextPropagator (from opentelemetry_sdk / opentelemetry) sets & extracts W3C traceparent headers.
+# tracing-opentelemetry syncs current tracing span context with OpenTelemetry Context.
+# Initialization Dependencies
+# Must create Resource + SdkTracerProvider (opentelemetry_sdk).
+# Attach OTLP SpanExporter (opentelemetry-otlp) using gRPC (tonic feature).
+# Set as global tracer provider (opentelemetry::global).
+# Build tracing subscriber stack: registry().with(fmt layer).with(opentelemetry layer).init().
+# File logging uses tracing-appender for non-blocking daily rotation.
+# Version Alignment
+# tracing-opentelemetry version must match the opentelemetry major series (0.31.0 pairs with opentelemetry 0.30.x).
+# opentelemetry_sdk and opentelemetry must share the same minor line (0.30.x).
+# tonic required only because OTLP exporter uses gRPC.
+# Summary
+# Instrumentation (tracing) → Observation/formatting (tracing-subscriber + appender) + Export bridge (tracing-opentelemetry) → OTel API/SDK (opentelemetry + opentelemetry_sdk) → OTLP Export (opentelemetry-otlp over tonic) → Collector.
