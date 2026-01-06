@@ -9,6 +9,12 @@ struct User {
     skills: Vec<String>,
 }
 
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+enum MyState {
+    Init(String),
+    Running(Vec<String>),
+    Done(u32),
+}
 fn main() -> Result<()> {
     let user = User {
         name: "Alice".to_string(),
@@ -23,8 +29,11 @@ fn main() -> Result<()> {
     // Deserialize the JSON string back to a User struct.
     let user1: User = serde_json::from_str(&json)?;
     println!("{:?}", user1);
+    // assert_eq!(user, user1);
 
-    assert_eq!(user, user1);
+    let state = MyState::Running(vec!["Rust".to_string(), "Python".to_string()]);
+    let json = serde_json::to_string(&state)?;
+    println!("{}", json);
 
     Ok(())
 }

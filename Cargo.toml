@@ -7,11 +7,13 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.99"
-chrono = "0.4.42"
+chacha20poly1305 = "0.10.1"
+chrono = { version = "0.4.42", features = ["serde"] }
 features = "0.10.0"
 opentelemetry = "0.30.0"
 opentelemetry-otlp = { version = "0.30.0", features = ["grpc-tonic", "http-proto"] }
 opentelemetry_sdk = { version = "0.30.0", features = ["rt-tokio"] }
+serde_with = "3.16.1"
 thiserror = "2.0.16"
 tonic = "0.14.2"
 tracing = "0.1.41"
@@ -21,8 +23,10 @@ tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 
 [dev-dependencies]
 axum = { version = "0.8.4", features = ["http2", "query", "tracing"] }
+base64 = "0.22.1"
 derive_builder = "0.20.2" # cargo add derive-builder --dev
 derive_more = { version = "2.0.1", features = ["full"] }
+http = "1.4.0"
 # derive_more = { version = "2.0.1", features = ["add", "display", "from", "into"] }
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.143"
@@ -61,3 +65,8 @@ tokio = { version = "1.47.1", features = ["rt", "rt-multi-thread", "macros"] }
 # tonic required only because OTLP exporter uses gRPC.
 # Summary
 # Instrumentation (tracing) → Observation/formatting (tracing-subscriber + appender) + Export bridge (tracing-opentelemetry) → OTel API/SDK (opentelemetry + opentelemetry_sdk) → OTLP Export (opentelemetry-otlp over tonic) → Collector.
+
+# Strum is a Rust crate that makes working with enums ergonomic. It provides:
+# Derive macros: EnumString (parse from str), Display, EnumIter (iterate variants), EnumVariantNames (get names), IntoStaticStr/AsRefStr, FromRepr, EnumDiscriminants, EnumProperty (attach metadata).
+# Core traits that those derives implement.
+# With features = ["derive"], strum re-exports the derive macros (no separate strum_macros dep needed).
