@@ -33,6 +33,16 @@ use serde::{Deserialize, Serialize};
 use serde_with::{serde_as, DisplayFromStr};
 
 const KEY: &[u8] = b"01234567890123456789012345678901";
+// ChaCha20Poly1305 requires exactly 32 bytes (256 bits) for the key.
+// This is a cryptographic requirement, not optional. ChaCha20 algorithm is designed to accept exactly 256-bit keys; the nonce must be 96 bits (12 bytes, which you see in ChaCha20Poly1305::generate_nonce() and decoded[..12]).
+
+// Example: hash user password to 32 bytes
+// use sha2::{Sha256, Digest};
+
+// let password = "my-secret";
+// let mut hasher = Sha256::new();
+// hasher.update(password.as_bytes());
+// let key: [u8; 32] = hasher.finalize().into(); // Exactly 32 bytes
 
 #[serde_as]
 #[derive(Debug, Serialize, Deserialize)]
