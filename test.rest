@@ -11,3 +11,11 @@ Content-Type: application/json
 {
   "age": 40,
 }
+
+
+PATCH http://localhost:8081/
+Content-Type: application/json
+
+{
+  "skills": ["Rust"]
+}
