@@ -26,14 +26,20 @@ axum = { version = "0.8.4", features = ["http2", "query", "tracing"] }
 base64 = "0.22.1"
 blake3 = "1.8.3"
 bytes = "1.11.0"
+console-subscriber = "0.5.0"
+dashmap = "6.1.0"
 derive_builder = "0.20.2" # cargo add derive-builder --dev
 derive_more = { version = "2.0.1", features = ["full"] }
+futures = "0.3.32"
 http = "1.4.0"
+loom = "0.7.2"
 # derive_more = { version = "2.0.1", features = ["add", "display", "from", "into"] }
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.143"
 strum = { version = "0.27.2", features = ["derive"] }
 tokio = { version = "1.47.1", features = ["fs", "rt", "rt-multi-thread", "macros"] }
+tokio-stream = "0.1.18"
+tokio-util = { version = "0.7.18", features = ["codec"] }
 
 # Crate Roles
 # tracing: Core instrumentation API (spans, events, macros).
