@@ -19,3 +19,36 @@ Content-Type: application/json
 {
   "skills": ["Rust"]
 }
+
+
+
+### url shortener
+
+POST http://127.0.0.1:9876/
+Content-Type: application/json
+
+{
+  "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422"
+}
+
+### url redirect
+
+GET http://127.0.0.1:9876/50mzmm
+
+
+# curl -X POST http://127.0.0.1:9876/ \
+#   -H "Content-Type: application/json" \
+#   -d '{"url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422"}'
+
+# curl -X POST http://127.0.0.1:9876/ \
+#   -H "Content-Type: application/json" \
+#   -d '{"url": ""}'
+
+# To see the HTTP response headers (including the redirect Location and 308 status), add the -i (include) flag:
+# curl -i http://127.0.0.1:9876/SomWT_
+
+# If you want curl to automatically follow the redirect and fetch the destination URL, use the -L (location) flag:
+# curl -L http://127.0.0.1:9876/50mzmm
+
+# 或者直接在浏览器
+# http://127.0.0.1:9876/50mzmm

@@ -29,6 +29,7 @@ struct MyInt(i32);
 // println!("{a}, {b}, {c}, {sum}");
 
 #[derive(PartialEq, From)]
+#[allow(dead_code)]
 struct Point2D {
     x: i32,
     y: i32,
